@@ -1,0 +1,15 @@
+{%extends 'base.html'%}
+{%block title%} Home Page {%endblock%}
+{%block content%}
+<p> this is the block content</p>
+<div>
+    <div>
+        {% for room in rooms %}
+        <div>
+            <h5>{{room.id}} -- <a href = "{%url 'room' room.id%}">{{room.name}}</a></h5><!-- href tag based on url path name param-->
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{%endblock%}
+

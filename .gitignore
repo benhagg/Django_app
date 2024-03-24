@@ -1,0 +1,19 @@
+# Ignore virtual environment
+venv/
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+# Ignore SQLite database files
+*.sqlite3
+# Ignore PyCharm settings
+.idea/
+# Ignore Visual Studio Code settings
+.vscode/
+# Ignore log files
+*.log
+# Ignore backup files
+*.bak
+# Ignore Vim swap files
+*.swp
+# Ignore coverage report files
+.coverage
