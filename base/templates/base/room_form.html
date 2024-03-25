@@ -4,7 +4,7 @@
 <div>
     <form method = "POST" action ="">
         {%csrf_token%} <!-- sent with every form request submit to protect from cross site forgery attacks -->
-
+        {{form.as_p}} <!--wraps each element of the form in a <p> tag-->
         <input type = "submit" value = "Submit"/>
     </form>
 </div>

@@ -21,6 +21,10 @@ class Room(models.Model):
     updated = models.DateTimeField(auto_now = True) # field will be timestamped with every edit to the model
     created = models.DateTimeField(auto_now_add = True) # timestamp for when the model was created
 
+
+    class Meta: # it allows you to specify options (also known as metadata)
+        ordering = ['-updated', '-created'] # newest room will be displayed first
+
     def __str__(self):
         return self.name
     

@@ -3,12 +3,14 @@
 {%block content%}
 <h1> Home Template</h1>
 <div>
-    <a href= "{%url 'create-room' %}"> Create Room </a>
+    <a href= "{% url 'create-room' %}"> Create Room </a>
     <div>
         {% for room in rooms %}
         <div>
-            <span>@{{room.host.username}}</span><!--this will query upward to the parent class and display host info-->
-            <h5>{{room.id}} -- <a href = "{%url 'room' room.id%}">{{room.name}}</a></h5><!-- href tag based on url path name param-->
+            <a href = "{% url 'update-room' room.id %}"> Edit </a>
+            <a href = "{%url 'delete-room' room.id%}"> Delete </a>
+            <span></span>@{{room.host.username}}</span><!--this will query upward to the parent class and display host info-->
+            <h5>{{room.id}} -- <a href = "{% url 'room' room.id %}">{{room.name}}</a></h5><!-- href tag based on url path name param-->
             <small>{{room.topic.name}}</small>
             <hr> <!-- line break tag -->
         </div>
