@@ -1,12 +1,16 @@
 {%extends 'base.html'%}
 {%block title%} Home Page {%endblock%}
 {%block content%}
-<p> this is the block content</p>
+<h1> Home Template</h1>
 <div>
+    <a href= "{%url 'create-room' %}"> Create Room </a>
     <div>
         {% for room in rooms %}
         <div>
+            <span>@{{room.host.username}}</span><!--this will query upward to the parent class and display host info-->
             <h5>{{room.id}} -- <a href = "{%url 'room' room.id%}">{{room.name}}</a></h5><!-- href tag based on url path name param-->
+            <small>{{room.topic.name}}</small>
+            <hr> <!-- line break tag -->
         </div>
         {%endfor%}
     </div>
