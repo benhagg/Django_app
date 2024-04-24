@@ -17,7 +17,7 @@ class Room(models.Model):
     topic = models.ForeignKey(Topic, on_delete = models.SET_NULL, null = True) # if the topic is deleted, room's topic set to null
     name = models.CharField(max_length = 200)
     description = models.TextField(null = True, blank = True) # null for db, blank for form submissions-
-    # participants =
+    participants = models.ManyToManyField(User, related_name = 'participants') # many to many relationship with User (by fk)
     updated = models.DateTimeField(auto_now = True) # field will be timestamped with every edit to the model
     created = models.DateTimeField(auto_now_add = True) # timestamp for when the model was created
 
