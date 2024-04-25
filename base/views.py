@@ -81,6 +81,7 @@ def room(request, pk):
             room = room, 
             body = request.POST.get('body') # the form's name = 'body'
         )
+        room.participants.add(request.user) # add the user to the room
         return redirect('room', pk = room.id) # reload the page
     
     context = {'room': room, 'room_messages': room_messages, 'participants': participants}
@@ -121,3 +122,13 @@ def deleteRoom(request, pk):
         room.delete() # delete this object from the db
         return redirect('home')
     return render(request, 'base/delete.html', {'obj':room})
+
+@login_required(login_url= 'login') # check if user is logged in and redirect to login page if not
+def deleteMessage(request, pk):
+    message = Message.objects.get(id=pk)
+    # if request.user != Message.user: # check if the user is the owner of the message
+    #     return HttpResponse('This is not your message')
+    if request.method == "POST":
+        message.delete() # delete this object from the db
+        return redirect('room', pk = message.room.id) # redirect to the room page
+    return render(request, 'base/delete.html', {'obj':message})
