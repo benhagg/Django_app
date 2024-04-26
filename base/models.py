@@ -37,5 +37,8 @@ class Message(models.Model):
     updated = models.DateTimeField(auto_now = True)
     created = models.DateTimeField(auto_now_add = True)
 
+    class Meta: # it allows you to specify options (also known as metadata)
+        ordering = ['-updated', '-created'] # newest message will be displayed first
+
     def __str__(self):
         return self.body[0:50] # return the first 50 characters of the message body in the preview

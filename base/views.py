@@ -64,14 +64,17 @@ def home(request):
                                 Q(topic__name__icontains = q) |
                                 Q(description__icontains = q)) # makes sure the topic name contains the query
     topics = Topic.objects.all()
+    room_messages = Message.objects.all() # get all messages
     room_count = rooms.count() # get the count of rooms
-    context = {'rooms': rooms,  'topics': topics, 'room_count' : room_count} # create a context dictionary for the passed data
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains = q))
+
+    context = {'rooms': rooms,  'topics': topics, 'room_count' : room_count, 'room_messages': room_messages} # create a context dictionary for the passed data
     return render(request, 'base/home.html', context) # third arg expected as a dictionary {'rooms': rooms}
 
 def room(request, pk):
     q = request.GET.get('q') # get the query from the url
     room = Room.objects.get(id=pk)
-    room_messages = room.message_set.all().order_by('-created')
+    room_messages = room.message_set.all() #.order_by('-created'): another option we ordered the whole messages class instead
     participants = room.participants.all()
     # query all messages from the room, also order by created date desc
 
@@ -87,13 +90,23 @@ def room(request, pk):
     context = {'room': room, 'room_messages': room_messages, 'participants': participants}
     return render(request, 'base/room.html', context)
 
+def userProfile(request, pk):
+    user = User.objects.get(id = pk)
+    rooms = user.room_set.all()
+    room_messages = user.message_set.all()
+    topics = Topic.objects.all()
+    context = {'user': user, 'rooms': rooms, 'room_messages': room_messages, 'topics': topics}
+    return render(request, 'base/profile.html', context)
+
 @login_required(login_url= 'login') # check if user is logged in and redirect to login page if not
 def createRoom (request):
     form = RoomForm()
     if request.method == "POST":
         form = RoomForm(request.POST)
         if form.is_valid:
-            form.save() # saves to db
+            room = form.save(commit = False) # does not save to db
+            room.host = request.user # set the host to the current user
+            room.save()
             return redirect('home')
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
