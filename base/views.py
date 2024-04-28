@@ -101,6 +101,7 @@ def userProfile(request, pk):
 @login_required(login_url= 'login') # check if user is logged in and redirect to login page if not
 def createRoom (request):
     form = RoomForm()
+    topics = Topic.objects.all()
     if request.method == "POST":
         form = RoomForm(request.POST)
         if form.is_valid:
@@ -108,13 +109,14 @@ def createRoom (request):
             room.host = request.user # set the host to the current user
             room.save()
             return redirect('home')
-    context = {'form': form}
+    context = {'form': form, 'topics': topics}
     return render(request, 'base/room_form.html', context)
 
 @login_required(login_url= 'login') # check if user is logged in and redirect to login page if not
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance = room) # the form will be pre filled with the room data
+    topics = Topic.objects.all()
 
     if request.user != room.host: # check if the user is the owner of the room
         return HttpResponse('You are not the owner of this room')
@@ -123,7 +125,7 @@ def updateRoom(request, pk):
         form = RoomForm(request.POST, instance = room) # new POST data will replace the room object data in the room variable
         if form.is_valid: # checks if form is valid
             form.save() # saves to db
-    context = {'form': form}
+    context = {'form': form, 'topics': topics}
     return render(request, 'base/room_form.html', context)
 
 @login_required(login_url= 'login') # check if user is logged in and redirect to login page if not
