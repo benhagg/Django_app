@@ -16,16 +16,16 @@
             </div>
           </div>
           <div class="profile__info">
-            <h3>Dennis Kardasian Ivy</h3>
-            <p>@dennis_ivy</p>
-            <a href="edit-user.html" class="btn btn--main btn--pill">Edit Profile</a>
+            <h3>{{user.username}}</h3>
+            <p>@{{user.email}}</p>
+            {% if request.user == user %}
+            <a href="{% url 'edit-user' %}" class="btn btn--main btn--pill">Edit Profile</a>
+            {% endif %}
           </div>
           <div class="profile__about">
             <h3>About</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur illo tenetur
-              facilis sunt nemo debitis quisquam hic atque aut? Ducimus alias placeat optio
-              accusamus repudiandae quis ab ex exercitationem rem?
+              {{user.bio}}
             </p>
           </div>
         </div>
