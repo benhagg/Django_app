@@ -41,7 +41,7 @@ def LogoutUser(request):
     return redirect('home')
 
 def registerUser(request):
-    page = 'register'
+    # page = 'register' delete if this works
     form = UserCreationForm() # create a form object
 
     if request.method == "POST":
@@ -63,7 +63,7 @@ def home(request):
     rooms = Room.objects.filter(Q(topic__name__icontains = q) | # search by topic or name or description
                                 Q(topic__name__icontains = q) |
                                 Q(description__icontains = q)) # makes sure the topic name contains the query
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5] # get the first 5 topics
     room_messages = Message.objects.all() # get all messages
     room_count = rooms.count() # get the count of rooms
     room_messages = Message.objects.filter(Q(room__topic__name__icontains = q))
@@ -154,7 +154,7 @@ def deleteMessage(request, pk):
     #     return HttpResponse('This is not your message')
     if request.method == "POST":
         message.delete() # delete this object from the db
-        return redirect('room', pk = message.room.id) # redirect to the room page
+        return redirect('home') # pk = message.room.id) # redirect to the room page
     return render(request, 'base/delete.html', {'obj':message})
 
 @login_required(login_url = 'login')
@@ -166,6 +166,15 @@ def updateUser(request):
         form = UserForm(request.POST, instance = user)
         if form.is_valid():
             form.save()
-            return redirect('user-profile', pk = user.id)
-    context = {'form': form}
-    return render(request, 'base/edit-user.html', context)
+            return redirect('home')
+    return render(request, 'base/edit-user.html', {'form': form})
+
+def topicsPage(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else '' # inline if else to get query from URL (search)
+    topics = Topic.objects.filter(name__icontains = q)
+    return render(request, 'base/topics.html', {'topics': topics})
+
+def activityPage(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else '' # inline if else to get query from URL (search)
+    room_messages = Message.objects.filter(body__icontains = q)
+    return render(request, 'base/activity.html', {'room_messages': room_messages})
