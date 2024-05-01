@@ -1,6 +1,6 @@
 from django.forms import ModelForm
-from .models import Room
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from .models import Room, User
 
 class RoomForm(ModelForm): # model based forms. creating a form that is based on the values in the Room model
     class Meta:    
@@ -11,5 +11,9 @@ class RoomForm(ModelForm): # model based forms. creating a form that is based on
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['email', 'username', 'bio', 'avatar']
         
+class MyUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'password1', 'password2']

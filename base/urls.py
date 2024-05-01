@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings # access to settings.py file
+from django.conf.urls.static import static # access to static files
 
 urlpatterns = [
     path('login/', views.loginPage, name = 'login'),
@@ -21,3 +23,7 @@ urlpatterns = [
     path('topics/', views.topicsPage, name="topics"),
     path('activity/', views.activityPage, name="activity")
 ]
+
+# for user uploaded profile images
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# set the url and get the file from media root

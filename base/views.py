@@ -3,11 +3,10 @@ from django.contrib import messages # flash messages
 from django.http import HttpResponse
 from django.db.models import Q # for search queries
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-from .models import Room, Topic, Message
-from .forms import RoomForm, UserForm
+
+from .models import Room, Topic, Message, User
+from .forms import RoomForm, UserForm, MyUserCreationForm
 
 # Create your views here.
 # function based views -- Class based views are also possible
@@ -18,13 +17,13 @@ def loginPage(request):
         return redirect('home')
 
     if request.method == "POST":
-        username = request.POST.get('username').lower()  # get the username from the form
+        email = request.POST.get('email').lower()  # get the username from the form
         password = request.POST.get('password')  # get the password from the form
         # Attempt to retrieve the user; handle case where user does not exist
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
             # Authenticate the user
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)  # creates a session in the db and browser
                 return redirect('home')  # redirect to the home page
@@ -42,10 +41,10 @@ def LogoutUser(request):
 
 def registerUser(request):
     # page = 'register' delete if this works
-    form = UserCreationForm() # create a form object
+    form = MyUserCreationForm() # create a form object
 
     if request.method == "POST":
-        form = UserCreationForm(request.POST) # get the form data
+        form = MyUserCreationForm(request.POST) # get the form data
         if form.is_valid():
             user = form.save(commit=False) # does not immediately save to db
             # clean the form input data
@@ -163,7 +162,7 @@ def updateUser(request):
     form = UserForm(instance = user)
 
     if request.method == "POST":
-        form = UserForm(request.POST, instance = user)
+        form = UserForm(request.POST, request.FILES, instance = user)
         if form.is_valid():
             form.save()
             return redirect('home')

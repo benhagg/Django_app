@@ -1,9 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import User # built in user model
+from django.contrib.auth.models import AbstractUser # built in user model
 
 
 
 # Create your models here. ---------------------------------------------------------------------
+
+class User(AbstractUser):
+    username = models.CharField(max_length = 200, default = 'Anonymous', null=True) # default name for the user
+    email = models.EmailField(unique = True) # email field for the user
+    bio = models.TextField(default = 'No bio...') # bio field for the user
+    avatar = models.ImageField(null=False, default="avatar.svg")
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
 class Topic(models.Model):
     name = models.CharField(max_length = 200)
